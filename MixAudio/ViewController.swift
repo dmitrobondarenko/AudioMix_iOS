@@ -54,7 +54,7 @@ class ViewController: UIViewController {
             }
         }
         
-        mixAudio(audios: assets, duration: CMTime(seconds: 5, preferredTimescale: 100)) { (output) in
+        mixAudio(audios: assets, duration: CMTime(seconds: 4, preferredTimescale: 100)) { (output) in
             self.playAudio(url: output)
         }
     }
@@ -67,20 +67,19 @@ class ViewController: UIViewController {
         
         let composition = AVMutableComposition()
         
-        var from = CMTime.zero
+        let from = CMTime.zero
         
         for asset in audios {
             let compositionAudioTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: CMPersistentTrackID())
-            
             var track = asset.tracks(withMediaType: .audio)
-            let assetTrack = track[0]
+            let audioTrack = track[0]
             
             //let assetDuration = assetTrack.timeRange.duration
             
             let timeRange = CMTimeRange(start: from, duration: duration)
             
-            try? compositionAudioTrack?.insertTimeRange(timeRange, of: assetTrack, at: CMTime.zero/*from*/)
-            from = from + duration
+            try? compositionAudioTrack?.insertTimeRange(timeRange, of: audioTrack, at: CMTime.zero/*from*/)
+            //from = CMTimeAdd(from, timeRange.duration)
         }
         
         // export audio
@@ -126,7 +125,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             playAudio(name: titles[indexPath.row])
             break
         default:
-            mixAudioFiles(names: [titles[1], titles[3]]) // mix sample2.mp3 and sample4.mp3
+            mixAudioFiles(names: [titles[0], titles[1]]) // mix sample2.mp3 and sample4.mp3
             break
         }
     }
